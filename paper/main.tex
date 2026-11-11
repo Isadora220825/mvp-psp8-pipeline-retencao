@@ -67,11 +67,12 @@ checagem de suporte empírico dos contrafactuais usados na camada prescritiva. O
 resultados mostram que a vantagem da abordagem estatística sobre a regra de negócio é
 sólida em ordenação de risco (\(\Delta\)AUC de \(+0{,}035\), IC 95\% \([+0{,}022;
 +0{,}048]\), superior em 100\% de 25 reamostragens) mas incerta em resultado financeiro
-(IC 95\% cruzando zero). Duas conclusões de uma versão anterior deste MVP não
-sobreviveram ao reteste contra adversários tradicionais construídos na sua melhor versão:
-a superioridade da clusterização em segmentação desapareceu, e o ganho prescritivo caiu
-de \(+130\%\) para \(+53\%\). Uma das três ações prescritas revelou-se extrapolação, com
-apenas 19\% dos clientes elegíveis em região de sobreposição empírica.
+(IC 95\% cruzando zero). A construção deliberada de adversários tradicionais em duas
+versões --- uma simplificada e uma forte --- mostra que a magnitude atribuída aos métodos
+estatísticos depende dessa escolha: em segmentação, uma tabela cruzada de duas variáveis
+supera a clusterização, e em prescrição o ganho cai de \(+130\%\) para \(+53\%\). Uma das
+três ações prescritas revelou-se extrapolação, com apenas 19\% dos clientes elegíveis em
+região de sobreposição empírica.
 
 \vspace{4pt}
 \noindent\textbf{Palavras-chave:} pipeline de dados; modelagem dimensional; qualidade de
@@ -103,13 +104,13 @@ sustentar contas em dinheiro; (P5) qual alocação de orçamento maximiza o reto
 ganho sobre uma regra de negócio bem construída; e (P6) se o modelo trata grupos
 demográficos de forma equilibrada.
 
-O trabalho parte de uma versão anterior do mesmo MVP, desenvolvida pela autora, que
-comparava análise tradicional e aprendizado de máquina em cinco pares e concluía pela
-superioridade da segunda em cinco de cinco indicadores. A revisão crítica dessa versão é
-parte do objeto deste artigo. Três das verificações aqui introduzidas --- calibração,
-critério de corte econômico e suporte do contrafactual --- alteram ou qualificam
-conclusões anteriores, e o fazem na direção de reduzir, não ampliar, a vantagem atribuída
-aos métodos estatísticos.
+Comparações entre análise tradicional e métodos estatísticos costumam opor ao modelo uma
+versão simplificada da alternativa de negócio, o que infla a vantagem medida. Este trabalho
+trata essa escolha como variável experimental: cada comparação é executada contra duas
+versões da abordagem tradicional, uma simplificada e uma construída com o cuidado que um
+analista empregaria. Soma-se a isso três verificações habitualmente omitidas --- calibração
+das probabilidades, critério de corte econômico e suporte empírico do contrafactual --- cujo
+efeito sobre os resultados é reportado na Seção~\ref{sec:resultados}.
 
 % =====================================================================
 \section{Revisão}
@@ -226,11 +227,11 @@ receita.
 e escolha de limiares --- é repetido sobre 25 divisões independentes, reportando-se a
 distribuição das diferenças em AUC, F1 e lucro.
 
-\paragraph{Adversários justos.} Duas comparações da versão anterior são refeitas contra
-versões fortes da abordagem tradicional. Em segmentação, acrescenta-se a tabela cruzada
-de \emph{duas} variáveis (contrato \(\times\) tempo de casa) às faixas de variável única
-originalmente usadas. Em prescrição, acrescenta-se uma regra de atribuição de ação por
-perfil à oferta única originalmente usada.
+\paragraph{Adversários justos.} Duas comparações são executadas contra duas versões da
+abordagem tradicional. Em segmentação, opõem-se à clusterização tanto faixas de variável
+única quanto uma tabela cruzada de \emph{duas} variáveis (contrato \(\times\) tempo de casa).
+Em prescrição, opõem-se à otimização tanto a oferta única quanto uma regra de atribuição de
+ação por perfil. A diferença entre os dois resultados mede o efeito da escolha do adversário.
 
 \paragraph{Suporte do contrafactual.}
 \label{sec:prescritiva}
@@ -304,9 +305,10 @@ Reg.\ logística   & Lucro & 0,599 & 0,847 & \textbf{85.159} \\
 \paragraph{Calibração (P4).} A suspeita inicial não se confirmou: o ECE situa-se em 0,0146 já
 sem tratamento --- quando o modelo estima 30\%, o cancelamento observado fica entre 28,5\% e
 31,5\% --- e a recalibração isotônica o reduz a 0,0116. As probabilidades são utilizáveis em
-cálculo financeiro. O ponto metodológico permanece: a versão anterior as empregou em contas de
-valor esperado \emph{sem verificação}. O resultado foi favorável, mas é a verificação que
-converte suposição em premissa documentada.
+cálculo financeiro. O ponto metodológico permanece: trabalhos de previsão de cancelamento
+empregam rotineiramente essas probabilidades em contas de valor esperado \emph{sem verificar}
+a calibração. O resultado aqui foi favorável, mas é a verificação que converte suposição em
+premissa documentada.
 
 \paragraph{Critério de corte.} O efeito é material (Figura~\ref{fig:limiar}): o limiar cai de
 0,31 (F1) para 0,13 (lucro) e o resultado sobe de US\$ 79.952 para US\$ 85.159 ---
@@ -353,7 +355,7 @@ monetário depende de quais clientes caem na lista e de quanto pagam.
 
 \subsection{Segmentação: o efeito do adversário}
 
-A Tabela~\ref{tab:segmentacao} reporta o achado mais contundente do reteste. Uma tabela
+A Tabela~\ref{tab:segmentacao} reporta o achado mais contundente deste experimento. Uma tabela
 cruzada de duas variáveis, construível em planilha, \textbf{supera o K-Means com 19
 variáveis}. A silhueta de 0,134 confirma a ausência de agrupamentos naturais fortes: o
 algoritmo particiona um espaço contínuo em vez de descobrir estrutura.
@@ -374,7 +376,8 @@ Contrato \(\times\) tempo    & 2  & \textbf{0,1969} \\
 \end{tabular}
 \end{table}
 
-A vantagem de 32\% atribuída à clusterização na versão anterior media a fraqueza do adversário,
+Contra o adversário de variável única a clusterização aparece 23\% à frente; contra o de duas
+variáveis, atrás. A diferença entre as duas leituras mede a fraqueza do adversário escolhido,
 não a força do método: isso não desqualifica a clusterização, qualifica a comparação. O segmento
 crítico (mensal com menos de um ano, 52,4\% de cancelamento) é identificado pelas duas
 abordagens, mas só a de negócio é explicável ao time comercial sem intermediação.
@@ -455,14 +458,14 @@ tabela Delta e em arquivo operacional. O percurso --- ingestão fiel, perfilamen
 dimensões, modelagem em estrela com catálogo e carga validada por asserção --- é reprodutível e
 verificável após o encerramento da sessão.
 
-A contribuição principal, contudo, é metodológica e tem sinal negativo. Três verificações
-habitualmente omitidas alteraram materialmente as conclusões. A escolha do limiar por
-valor esperado, em vez de F1, adicionou US\$ 5.207 sem qualquer mudança de modelo ou de
-dado, confirmando em escala reduzida o argumento de Verbeke et al. \cite{verbeke}. A checagem de
-sobreposição revelou que uma das três ações prescritas carece de suporte empírico,
-produzindo números que dependem do modelo e não dos dados. E a reconstrução dos
-adversários tradicionais na sua melhor versão eliminou a vantagem da clusterização em
-segmentação e reduziu o ganho prescritivo de 130\% para 53\%.
+A contribuição principal, contudo, é metodológica, e aponta na direção de reduzir a vantagem
+usualmente atribuída aos métodos estatísticos. A escolha do limiar por valor esperado, em vez
+de F1, adicionou US\$ 5.207 sem qualquer mudança de modelo ou de dado, confirmando em escala
+reduzida o argumento de Verbeke et al. \cite{verbeke}. A checagem de sobreposição revelou que
+uma das três ações prescritas carece de suporte empírico, produzindo números que dependem do
+modelo e não dos dados. E a construção dos adversários tradicionais na sua melhor versão
+eliminou a vantagem da clusterização em segmentação e reduziu o ganho prescritivo de 130\%
+para 53\%.
 
 Essa última constatação é a mais transferível. Comparações entre abordagem tradicional e
 métodos estatísticos são frequentemente montadas com a primeira em versão deliberadamente
