@@ -394,6 +394,23 @@ modelo e os mesmos dados**, apenas por decidir com o critério correto. Errar um
 simétricos, e **F1 os trata com peso igual**. O F1 cai de 0,629 para 0,599, o que é esperado e
 irrelevante quando o objetivo é lucro.
 
+**A matriz de confusão mostra de onde vem a diferença.** Regressão logística, 1.761 clientes
+de teste (467 cancelamentos):
+
+| | Corte pelo F1 (τ = 0,31) | Corte pelo lucro (τ = 0,13) |
+|---|---:|---:|
+| Cancelaria e foi abordado (acerto) | 360 | 430 |
+| **Cancelaria e não foi abordado** (churn perdido, 12 mensalidades) | **107** | **37** |
+| Ficaria e foi abordado (alarme falso, US$ 30) | 318 | 538 |
+| Ficaria e não foi abordado | 976 | 756 |
+| *Recall* | 77% | 92% |
+| Abordados | 678 | 968 |
+
+O corte por lucro troca **alarmes falsos baratos por churns perdidos caros**. Ele aborda 290
+clientes a mais (968 contra 678), o que custa US$ 8.700 em contato; em contrapartida, deixa de
+perder 70 churners (107 → 37), cuja receita preservada soma US$ 13.907. O saldo é o ganho de
+**US$ 5.207**.
+
 > Este é o argumento de **Verbeke et al. (2012)**: modelos de cancelamento são rotineiramente
 > selecionados por métricas estatísticas, o que resulta em escolha subótima do ponto de vista
 > do lucro.
