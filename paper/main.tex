@@ -288,16 +288,16 @@ sozinho 210 clientes contra 43 da regra.
 \begin{table}[t]
 \centering
 \small
-\caption{Desempenho no teste (1.761 clientes) sob dois critérios de corte.}
+\caption{Desempenho no teste (1.761 clientes; 467 cancelamentos) sob dois critérios de corte. VP: cancelaria e foi abordado; FN: cancelaria e não foi abordado; FP: ficaria e foi abordado; VN: ficaria e não foi abordado.}
 \label{tab:predicao}
-\begin{tabular}{@{}llrrr@{}}
+\begin{tabular}{@{}llrrrrrrr@{}}
 \toprule
-\textbf{Abordagem} & \textbf{Corte} & \textbf{F1} & \textbf{AUC} & \textbf{Lucro} \\
+\textbf{Abordagem} & \textbf{Corte} & \textbf{F1} & \textbf{AUC} & \textbf{VP} & \textbf{FN} & \textbf{FP} & \textbf{VN} & \textbf{Lucro} \\
 \midrule
-Regra tradicional & F1    & 0,602 & 0,811 & 78.197 \\
-Regra tradicional & Lucro & 0,543 & 0,811 & 81.518 \\
-Reg.\ logística   & F1    & 0,629 & 0,847 & 79.952 \\
-Reg.\ logística   & Lucro & 0,599 & 0,847 & \textbf{85.159} \\
+Regra tradicional & F1    & 0,602 & 0,811 & 388 &  79 & 434 & 860 & 78.197 \\
+Regra tradicional & Lucro & 0,543 & 0,811 & 441 &  26 & 716 & 578 & 81.518 \\
+Reg.\ logística   & F1    & 0,629 & 0,847 & 360 & 107 & 318 & 976 & 79.952 \\
+Reg.\ logística   & Lucro & 0,599 & 0,847 & 430 &  \textbf{37} & 538 & 756 & \textbf{85.159} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -314,6 +314,11 @@ premissa documentada.
 0,31 (F1) para 0,13 (lucro) e o resultado sobe de US\$ 79.952 para US\$ 85.159 ---
 \textbf{US\$ 5.207 adicionais com o mesmo modelo e os mesmos dados}. O F1 cai de 0,629 para
 0,599, o que é esperado e irrelevante quando o objetivo é lucro e não simetria entre erros.
+
+A matriz de confusão (colunas VP, FN, FP e VN da Tabela~\ref{tab:predicao}) mostra a origem da
+diferença: o corte por lucro aborda 290 clientes a mais (US\$ 8.700 de contato) e deixa de perder
+70 churners, cuja receita preservada soma US\$ 13.907 --- troca alarmes falsos baratos por perdas
+caras.
 
 \begin{figure}[t]
 \centering
